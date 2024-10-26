@@ -350,9 +350,26 @@ func (t *NativeTun) routes(tunLink netlink.Link) ([]netlink.Route, error) {
 	if err != nil {
 		return nil, err
 	}
+	// Do not create gateway on linux by default
+	var (
+		gateway4, gateway6 netip.Addr
+	)
+	if t.options.Inet4Gateway.IsValid() {
+		gateway4 = t.options.Inet4Gateway
+	}
+	if t.options.Inet6Gateway.IsValid() {
+		gateway6 = t.options.Inet6Gateway
+	}
 	return common.Map(routeRanges, func(it netip.Prefix) netlink.Route {
+		var gateway net.IP
+		if it.Addr().Is4() && gateway4.IsValid() {
+			gateway = gateway4.AsSlice()
+		} else if it.Addr().Is6() && gateway6.IsValid() {
+			gateway = gateway6.AsSlice()
+		}
 		return netlink.Route{
 			Dst:       prefixToIPNet(it),
+			Gw:        gateway,
 			LinkIndex: tunLink.Attrs().Index,
 			Table:     t.options.IPRoute2TableIndex,
 		}

@@ -103,15 +103,16 @@ func (t *NativeTun) configure() error {
 		_ = luid.DisableDNSRegistration()
 	}
 	if t.options.AutoRoute {
+		gateway4, gateway6 := t.options.Inet4GatewayAddr(), t.options.Inet6GatewayAddr()
 		routeRanges, err := t.options.BuildAutoRouteRanges(false)
 		if err != nil {
 			return err
 		}
 		for _, routeRange := range routeRanges {
 			if routeRange.Addr().Is4() {
-				err = luid.AddRoute(routeRange, netip.IPv4Unspecified(), 0)
+				err = luid.AddRoute(routeRange, gateway4, 0)
 			} else {
-				err = luid.AddRoute(routeRange, netip.IPv6Unspecified(), 0)
+				err = luid.AddRoute(routeRange, gateway6, 0)
 			}
 		}
 		if err != nil {
