@@ -355,6 +355,7 @@ func (t *NativeTun) routes(tunLink netlink.Link) ([]netlink.Route, error) {
 			Dst:       prefixToIPNet(it),
 			LinkIndex: tunLink.Attrs().Index,
 			Table:     t.options.IPRoute2TableIndex,
+			Priority:  t.options.RouteMetric
 		}
 	}), nil
 }
