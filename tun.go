@@ -64,7 +64,8 @@ type Options struct {
 	Inet6RouteAddress        []netip.Prefix
 	Inet4RouteExcludeAddress []netip.Prefix
 	Inet6RouteExcludeAddress []netip.Prefix
-	RouteMetric              int
+	Inet4RouteMetric         int
+	Inet6RouteMetric         int
 	IncludeInterface         []string
 	ExcludeInterface         []string
 	IncludeUID               []ranges.Range[uint32]

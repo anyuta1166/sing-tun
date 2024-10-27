@@ -109,9 +109,9 @@ func (t *NativeTun) configure() error {
 		}
 		for _, routeRange := range routeRanges {
 			if routeRange.Addr().Is4() {
-				err = luid.AddRoute(routeRange, netip.IPv4Unspecified(), t.options.RouteMetric)
+				err = luid.AddRoute(routeRange, netip.IPv4Unspecified(), t.options.Inet4RouteMetric)
 			} else {
-				err = luid.AddRoute(routeRange, netip.IPv6Unspecified(), t.options.RouteMetric)
+				err = luid.AddRoute(routeRange, netip.IPv6Unspecified(), t.options.Inet6RouteMetric)
 			}
 		}
 		if err != nil {

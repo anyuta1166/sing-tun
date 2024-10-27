@@ -351,11 +351,17 @@ func (t *NativeTun) routes(tunLink netlink.Link) ([]netlink.Route, error) {
 		return nil, err
 	}
 	return common.Map(routeRanges, func(it netip.Prefix) netlink.Route {
+		var RouteMetric int
+		if it.Addr().Is4() {
+			RouteMetric = t.options.Inet4RouteMetric
+		} else {
+			RouteMetric = t.options.Inet6RouteMetric
+		}
 		return netlink.Route{
 			Dst:       prefixToIPNet(it),
 			LinkIndex: tunLink.Attrs().Index,
 			Table:     t.options.IPRoute2TableIndex,
-			Priority:  t.options.RouteMetric
+			Priority:  RouteMetric
 		}
 	}), nil
 }
